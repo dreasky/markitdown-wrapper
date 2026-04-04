@@ -1,4 +1,4 @@
-# markitdown-wrapper
+# markitdown_wrapper
 
 基于 [MarkItDown](https://github.com/microsoft/markitdown) 的封装库，支持文档转 Markdown，并通过 VL 模型将图片替换为语义描述。
 
@@ -6,11 +6,11 @@
 
 ```bash
 # 作为 git submodule
-git submodule add https://github.com/dreasky/markitdown-wrapper.git libs/markitdown-wrapper
-pip install -e libs/markitdown-wrapper
+git submodule add https://github.com/dreasky/markitdown_wrapper.git libs/markitdown_wrapper
+pip install -e libs/markitdown_wrapper
 
 # 可选：启用 OCR 支持
-pip install -e "libs/markitdown-wrapper[ocr]"
+pip install -e "libs/markitdown_wrapper[ocr]"
 ```
 
 ## 配置
