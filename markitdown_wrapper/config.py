@@ -12,11 +12,8 @@ class ConfigLoader:
 
     _DEFAULT = {"llm_prompt": "请输出图片描述信息", "enable_plugins": True}
 
-    def __init__(self):
-        skill_dir = Path(__file__).parent.parent.parent
-        env_file = skill_dir / ".env"
-        if env_file.exists():
-            load_dotenv(env_file)
+    def __init__(self, config_file: Path | None = None):
+        load_dotenv()
 
         missing = [k for k in ("DASHSCOPE_API_KEY", "BASE_URL", "MODEL_NAME")
                    if not os.environ.get(k)]
@@ -30,10 +27,12 @@ class ConfigLoader:
         self.model_name = os.environ["MODEL_NAME"]
 
         cfg = self._DEFAULT.copy()
-        config_file = skill_dir / "markitdown_config.json"
-        if config_file.exists():
-            for k, v in json.loads(config_file.read_text(encoding="utf-8")).items():
-                cfg[k] = v["value"] if isinstance(v, dict) and "value" in v else v
+        # 优先级：传入参数 > cwd/markitdown_config.json > 包内置默认配置
+        _builtin = Path(__file__).parent / "markitdown_config.json"
+        for path in (_builtin, config_file or Path.cwd() / "markitdown_config.json"):
+            if path and path.exists():
+                for k, v in json.loads(path.read_text(encoding="utf-8")).items():
+                    cfg[k] = v["value"] if isinstance(v, dict) and "value" in v else v
 
         self.llm_prompt: str = cfg.get("llm_prompt", self._DEFAULT["llm_prompt"])
         self.enable_plugins: bool = cfg.get("enable_plugins", self._DEFAULT["enable_plugins"])

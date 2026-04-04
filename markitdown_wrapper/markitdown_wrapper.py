@@ -59,8 +59,8 @@ def _display_src(src: str, max_len: int = 50) -> str:
 
 class MarkitdownWrapper:
 
-    def __init__(self):
-        config = ConfigLoader()
+    def __init__(self, config_file: Path | None = None):
+        config = ConfigLoader(config_file)
         client = OpenAI(api_key=config.api_key, base_url=config.base_url)
         self._md = MarkItDown(
             enable_plugins=config.enable_plugins,

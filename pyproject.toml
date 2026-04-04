@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "markitdown-wrapper"
+version = "0.1.0"
+description = "MarkItDown 封装库，支持文档转 Markdown 及图片语义化"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "markitdown[all]>=0.1.0",
+    "openai>=1.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+ocr = ["markitdown-ocr"]
+chardet = ["chardet"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["markitdown_wrapper*"]
+
+[tool.setuptools.package-data]
+markitdown_wrapper = ["markitdown_config.json"]
