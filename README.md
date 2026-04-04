@@ -6,7 +6,7 @@
 
 ```bash
 # 作为 git submodule
-git submodule add https://github.com/<your-username>/markitdown-wrapper.git libs/markitdown-wrapper
+git submodule add https://github.com/dreasky/markitdown-wrapper.git libs/markitdown-wrapper
 pip install -e libs/markitdown-wrapper
 
 # 可选：启用 OCR 支持
