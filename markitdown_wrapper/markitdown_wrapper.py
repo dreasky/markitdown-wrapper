@@ -94,8 +94,10 @@ class MarkitdownWrapper:
         output_md.write_text(result.text_content, encoding="utf-8")
         return output_md
 
-    def semantic_md(self, input_file: Path, output_file: Path) -> None:
+    def semantic_md(self, input_file: Path, output_dir: Path) -> None:
         """Replace images in a Markdown file with semantic descriptions."""
+        output_file = output_dir / (input_file.stem + ".md")
+
         if not input_file.exists():
             raise FileNotFoundError(f"Input file not found: {input_file}")
 
@@ -118,26 +120,5 @@ class MarkitdownWrapper:
             file=sys.stderr,
         )
 
-        output_file.parent.mkdir(parents=True, exist_ok=True)
+        output_dir.mkdir(parents=True, exist_ok=True)
         output_file.write_text(content, encoding="utf-8")
-
-    def semantic_md_list(
-        self, input_files: list[Path], output_dir: Path
-    ) -> tuple[list[Path], list[Path]]:
-        """Batch process Markdown files. Returns (succeeded, failed)."""
-        succeeded, failed = [], []
-        for f in input_files:
-            out = output_dir / f.name
-            try:
-                self.semantic_md(f, out)
-                succeeded.append(out)
-            except Exception as e:
-                print(f"[图片语义化失败] {f.name}: {e}", file=sys.stderr)
-                failed.append(f)
-
-        print(
-            f"[图片语义化] 共 {len(input_files)} 个文件: "
-            f"成功 {len(succeeded)} 个, 失败 {len(failed)} 个",
-            file=sys.stderr,
-        )
-        return succeeded, failed
