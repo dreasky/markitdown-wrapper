@@ -13,11 +13,9 @@ dependencies = [
     "markitdown[all]>=0.1.0",
     "openai>=1.0.0",
     "python-dotenv>=1.0.0",
+    "markitdown-ocr",
+    "chardet"
 ]
-
-[project.optional-dependencies]
-ocr = ["markitdown-ocr"]
-chardet = ["chardet"]
 
 [tool.setuptools.packages.find]
 where = ["."]
