@@ -9,8 +9,8 @@
 git submodule add https://github.com/dreasky/markitdown-wrapper.git libs/markitdown-wrapper
 pip install -e libs/markitdown-wrapper
 
-# 可选：启用 OCR 支持
-pip install -e "libs/markitdown-wrapper[ocr]"
+# 直接从 GitHub 安装
+pip install --upgrade git+https://github.com/dreasky/markitdown-wrapper.git
 ```
 
 ## 配置
