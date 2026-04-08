@@ -94,10 +94,8 @@ class MarkitdownWrapper:
         output_md.write_text(result.text_content, encoding="utf-8")
         return output_md
 
-    def semantic_md(self, input_file: Path, output_dir: Path) -> None:
+    def semantic_md(self, input_file: Path, output_file: Path) -> None:
         """Replace images in a Markdown file with semantic descriptions."""
-        output_file = output_dir / (input_file.stem + ".md")
-
         if not input_file.exists():
             raise FileNotFoundError(f"Input file not found: {input_file}")
 
@@ -120,5 +118,5 @@ class MarkitdownWrapper:
             file=sys.stderr,
         )
 
-        output_dir.mkdir(parents=True, exist_ok=True)
+        output_file.parent.mkdir(parents=True, exist_ok=True)
         output_file.write_text(content, encoding="utf-8")
