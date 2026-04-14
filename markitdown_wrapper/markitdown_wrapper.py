@@ -3,7 +3,7 @@
 import re
 import sys
 from pathlib import Path
-
+from markdownify import markdownify
 from markitdown import MarkItDown
 from openai import OpenAI
 
@@ -84,15 +84,14 @@ class MarkitdownWrapper:
             )
             return f"[图片处理失败: {label}]"
 
-    def convert(self, file: Path, output_dir: Path) -> Path:
+    def convert(self, input_file: Path, output_file: Path) -> None:
         """Convert a document/image to Markdown."""
-        output_dir.mkdir(parents=True, exist_ok=True)
+        output_file.parent.mkdir(parents=True, exist_ok=True)
 
-        result = self._md.convert(str(file), keep_data_uris=True)
+        result_temp = self._md.convert(str(input_file), keep_data_uris=True)
+        result = markdownify(result_temp.text_content)
 
-        output_md = output_dir / (file.stem + ".md")
-        output_md.write_text(result.text_content, encoding="utf-8")
-        return output_md
+        output_file.write_text(result, encoding="utf-8")
 
     def semantic_md(self, input_file: Path, output_file: Path) -> None:
         """Replace images in a Markdown file with semantic descriptions."""
