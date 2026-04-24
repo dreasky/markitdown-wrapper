@@ -69,20 +69,29 @@ class MarkitdownWrapper:
             llm_prompt=config.llm_prompt,
         )
 
+    @staticmethod
+    def _clean_description(text: str) -> str:
+        """Clean LLM-returned description: single line, plain text, no markdown syntax."""
+        text = text.replace("\n", " ").replace("\r", " ")
+        text = re.sub(r"[\[\]`*_#>|~]", "", text)
+        text = re.sub(r"\s+", " ", text).strip()
+        return text
+
     def _describe(self, src: str, md_dir: Path) -> str:
         resolved = _resolve_image_path(src, md_dir)
         label = _display_src(src)
         try:
             text_content = self._md.convert(resolved).text_content
-            return f"\n```markdown\n{text_content}\n```\n"
+            desc = self._clean_description(text_content)
+            return f"[{desc}]({src})"
         except FileNotFoundError:
             print(f"[图片语义化失败] 文件不存在: {label}", file=sys.stderr)
-            return f"[图片不存在: {label}]"
+            return f"[图片不存在: {label}]({src})"
         except Exception as e:
             print(
                 f"[图片语义化失败] {label} - {type(e).__name__}: {e}", file=sys.stderr
             )
-            return f"[图片处理失败: {label}]"
+            return f"[图片处理失败: {label}]({src})"
 
     def convert(self, input_file: Path, output_file: Path) -> None:
         """Convert a document/image to Markdown."""

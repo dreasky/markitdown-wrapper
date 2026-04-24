@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "markitdown-wrapper"
-version = "0.1.1"
+version = "0.1.2"
 description = "MarkItDown 封装库，支持文档转 Markdown 及图片语义化"
 readme = "README.md"
 requires-python = ">=3.10"
