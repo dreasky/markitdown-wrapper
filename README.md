@@ -5,9 +5,9 @@
 ## 安装
 
 ```bash
-# 作为 git submodule
-git submodule add https://github.com/dreasky/markitdown-wrapper.git libs/markitdown-wrapper
-pip install -e libs/markitdown-wrapper
+# 作为 git
+git clone https://github.com/dreasky/markitdown-wrapper.git
+pip install -e markitdown-wrapper
 
 # 直接从 GitHub 安装
 pip install --upgrade git+https://github.com/dreasky/markitdown-wrapper.git
@@ -40,10 +40,10 @@ wrapper = MarkitdownWrapper(config_file=Path("my_config.json"))
 
 配置项说明：
 
-| 字段 | 默认值 | 说明 |
-|---|---|---|
-| `llm_prompt` | 见内置配置 | VL 模型处理图片时的提示词 |
-| `enable_plugins` | `true` | 是否启用 MarkItDown 插件 |
+| 字段             | 默认值     | 说明                      |
+| ---------------- | ---------- | ------------------------- |
+| `llm_prompt`     | 见内置配置 | VL 模型处理图片时的提示词 |
+| `enable_plugins` | `true`     | 是否启用 MarkItDown 插件  |
 
 ## 使用
 
