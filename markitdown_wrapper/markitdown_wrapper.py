@@ -1,5 +1,6 @@
 """MarkItDown Wrapper — replace images in Markdown with semantic descriptions."""
 
+import base64
 import re
 import sys
 from pathlib import Path
@@ -15,6 +16,29 @@ _HTML_IMG = re.compile(
     r'(?:<[^>]+>\s*)*<img\s+[^>]*src=["\']([^"\']+)["\'][^>]*>(?:\s*</[^>]+>)*',
     re.IGNORECASE,
 )
+_BASE64_IMG = re.compile(r"!\[([^\]]*)\]\(data:([^;]+);base64,([^)]+)\)")
+
+
+def _save_base64_images(content: str, images_dir: Path, stem: str) -> str:
+    """Extract base64-encoded images from markdown, save as files under images_dir."""
+    images_dir.mkdir(parents=True, exist_ok=True)
+    idx = 0
+
+    def replace(m: re.Match) -> str:
+        nonlocal idx
+        alt, mime, b64 = m.group(1), m.group(2), m.group(3)
+        ext = mime.split("/")[-1].split("+")[0]
+        if ext not in {"png", "jpg", "jpeg", "gif", "bmp", "webp", "tiff"}:
+            ext = "png"
+        idx += 1
+        fname = f"{stem}_{idx:03d}.{ext}"
+        try:
+            (images_dir / fname).write_bytes(base64.b64decode(b64))
+            return f"![{alt}](imgs/{fname})"
+        except Exception:
+            return m.group(0)
+
+    return _BASE64_IMG.sub(replace, content)
 
 
 def _detect_encoding(file_path: Path) -> str:
@@ -94,11 +118,12 @@ class MarkitdownWrapper:
             return f"[图片处理失败: {label}]({src})"
 
     def convert(self, input_file: Path, output_file: Path) -> None:
-        """Convert a document/image to Markdown."""
+        """Convert a document/image to Markdown, saving embedded images to imgs/ subdir."""
         output_file.parent.mkdir(parents=True, exist_ok=True)
 
         result_temp = self._md.convert(str(input_file), keep_data_uris=True)
         result = markdownify(result_temp.text_content)
+        result = _save_base64_images(result, output_file.parent / "imgs", output_file.stem)
 
         output_file.write_text(result, encoding="utf-8")
 
